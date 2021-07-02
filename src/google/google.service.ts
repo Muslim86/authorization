@@ -8,14 +8,11 @@ export class GoogleService {
 
     async googleLogin(req: { user: any; }) {
         if (!req.user) {
-            console.log("логин провал")
             return 'Нет пользователя гугл'
         }
 
         const user = await this.userService.getUserByEmail(req.user.emails);
-        if (user) {
-            console.log("Такой гугл-пользователь есть")
-        } else {
+        if (!user) {
             const userDto = {
                 "email": req.user.emails,
                 "password": req.user.accesToken
