@@ -10,7 +10,6 @@ export class UsersService {
                 private roleService: RolesService) {}
 
     async createUser(dto: CreateUserDto) {
-        console.log("Юзер создать")
         const user = await this.userRepository.create(dto);
         const role = await this.roleService.getRoleByValue('default');
         await user.$set('roles', [role.id]);
