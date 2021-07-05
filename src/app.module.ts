@@ -7,6 +7,7 @@ import { RolesModule } from './roles/roles.module';
 import { Role } from "./roles/roles.model";
 import { UserRoles } from "./roles/user-roles.model";
 import { GoogleModule } from './google/google.module';
+import { FacebookModule } from './facebook/facebook.module';
 
 @Module({
     controllers: [],
@@ -28,6 +29,7 @@ import { GoogleModule } from './google/google.module';
         UsersModule,
         RolesModule,
         GoogleModule,
+        FacebookModule,
     ]
 })
 export class AppModule{}

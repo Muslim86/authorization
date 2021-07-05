@@ -17,7 +17,7 @@ export class AuthService {
     }
 
     async registration(userDto: CreateUserDto) {
-        const candidate = await this.userService.getUserByEmail(userDto.email);
+        const candidate = await this.userService.getUserByLogin(userDto.login);
         if (candidate) {
             throw new HttpException('Пользователь с таким номером существует!', HttpStatus.BAD_REQUEST)
         }
@@ -27,14 +27,14 @@ export class AuthService {
     }
 
     private async generateToken(user: User) {
-        const payload = {phone: user.email, id: user.id, roles: user.roles}
+        const payload = {login: user.login, id: user.id, roles: user.roles}
         return {
             token: this.jwtService.sign(payload)
         }
     }
 
     private async validateUser(userDto: CreateUserDto) {
-        const user = await this.userService.getUserByEmail(userDto.email);
+        const user = await this.userService.getUserByLogin(userDto.login);
         const passwordEquals = await bcrypt.compare(userDto.password, user.password)
         if (user && passwordEquals) {
             return user;

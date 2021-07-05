@@ -20,7 +20,6 @@ export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
 
     async validate (accesToken: string, refreshToken: string, profile: any, done: VerifyCallback): Promise<any> {
         const {name, emails, photos} = profile;
-        try {
             const user = {
             emails: emails[0].value,
             firstName: name.givenName,
@@ -28,10 +27,7 @@ export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
             picture: photos[0].value,
             accesToken
             }
-            
-            return user;
-        } catch (error) {
-            console.log("Нет данных")
-        }
+
+        done(null, user)      
     }
 }

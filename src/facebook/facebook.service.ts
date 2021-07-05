@@ -2,11 +2,11 @@ import { Injectable } from '@nestjs/common';
 import { UsersService } from 'src/users/users.service';
 
 @Injectable()
-export class GoogleService {
+export class FacebookService {
 
     constructor(private userService: UsersService) {}
 
-    async googleLogin(req: { user: any; }) {
+    async facebookLogin(req: {user: any}) {
         if (!req.user) {
             return 'Нет пользователя гугл'
         }
