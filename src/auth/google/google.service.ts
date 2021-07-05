@@ -19,6 +19,8 @@ export class GoogleService {
                 "password": req.user.accesToken
             }
             const newUser = this.userService.createUser(userDto);
+        } else {
+            const updateUser = this.userService.updateUserToken(req.user.emails, req.user.accesToken);
         }
         return {
             message: 'Информация о пользователе гугл',

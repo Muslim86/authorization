@@ -6,9 +6,9 @@ import { UsersModule } from './users/users.module';
 import { RolesModule } from './roles/roles.module';
 import { Role } from "./roles/roles.model";
 import { UserRoles } from "./roles/user-roles.model";
-import { GoogleModule } from './google/google.module';
-import { FacebookModule } from './facebook/facebook.module';
-import { VkontakteModule } from './vkontakte/vkontakte.module';
+import { GoogleModule } from './auth/google/google.module';
+import { FacebookModule } from './auth/facebook/facebook.module';
+import { VkontakteModule } from './auth/vkontakte/vkontakte.module';
 
 @Module({
     controllers: [],

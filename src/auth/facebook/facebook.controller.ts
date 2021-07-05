@@ -11,7 +11,7 @@ export class FacebookController {
     constructor(private facebookService: FacebookService) {}
 
     @ApiOperation({summary:'Аутентификация пользователя'})
-    @Get('/login')
+    @Get()
     @UseGuards(AuthGuard("facebook"))
     async facebookLogin(): Promise<any> {
         return HttpStatus.OK

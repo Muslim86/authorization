@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
+import { where } from 'sequelize/types';
 import { RolesService } from 'src/roles/roles.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { User } from './users.model';
@@ -25,5 +26,11 @@ export class UsersService {
     async getUserByLogin(login: string) {
         const user = await this.userRepository.findOne({where: {login}, include: {all: true}});
         return user;
+    }
+
+    async updateUserToken(login: string, accesToken: string) {
+        const user = await this.userRepository.findOne({where: {login}});
+        user.password = accesToken
+        await user.save();
     }
 }
