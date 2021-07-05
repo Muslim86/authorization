@@ -1,27 +1,27 @@
 import { Injectable } from '@nestjs/common';
-
 import { UsersService } from 'src/users/users.service';
 
 @Injectable()
-export class FacebookService {
+export class VkontakteService {
 
     constructor(private userService: UsersService) {}
 
-    async facebookLogin(req: {user: any}) {
+    async vkLogin(req: {user: any}) {
         if (!req.user) {
-            return 'Нет пользователя гугл'
+            return 'Нет пользователя вк'
         }
 
-        const user = await this.userService.getUserByLogin(req.user.emails);
+        const user = await this.userService.getUserByLogin(String(req.user.id));
         if (!user) {
             const userDto = {
-                "login": req.user.emails,
+                "login": req.user.id,
                 "password": req.user.accesToken
             }
             const newUser = this.userService.createUser(userDto);
         }
+
         return {
-            message: 'Информация о пользователе гугл',
+            message: 'Информация о пользователе Вконтакте',
             user: req.user
         }
     }

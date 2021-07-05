@@ -17,8 +17,7 @@ export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
             scope: ['email', 'profile'],
         });
     }
-
-    async validate (accesToken: string, refreshToken: string, profile: any, done: VerifyCallback): Promise<any> {
+    async validate(accesToken: string, refreshToken: string, profile: any, done: VerifyCallback): Promise<any> {
         const {name, emails, photos} = profile;
             const user = {
             emails: emails[0].value,
