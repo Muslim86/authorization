@@ -12,7 +12,7 @@ export class VkontakteStategy extends PassportStrategy(Strategy, 'vkontakte') {
         super({
             clientID: process.env.VK_APP_ID,
             clientSecret: process.env.VK_APP_SECRET,
-            callbackURL: "http://localhost:5000/vk/redirect",
+            callbackURL: `http://localhost:${process.env.PORT}/vk/redirect`,
             scope: ["email"],
         },
         async function validate(accesToken: string, refreshToken: string, params: any , profile : Profile, done: VerifyCallback): Promise<any> {

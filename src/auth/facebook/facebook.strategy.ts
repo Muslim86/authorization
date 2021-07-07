@@ -1,6 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { PassportStrategy } from "@nestjs/passport";
 import { Strategy, Profile } from "passport-facebook";
+import { STRING } from "sequelize/types";
 
 
 @Injectable()
@@ -10,7 +11,7 @@ export class FacebookStategy extends PassportStrategy(Strategy, 'facebook') {
         super({
             clientID: process.env.FACEBOOK_APP_ID,
             clientSecret: process.env.FACEBOOK_APP_SECRET,
-            callbackURL: "http://localhost:5000/facebook/redirect",
+            callbackURL: `http://localhost:${process.env.PORT}/facebook/redirect`,
             scope: "email",
             profileFields: ["emails", "name"],
         });

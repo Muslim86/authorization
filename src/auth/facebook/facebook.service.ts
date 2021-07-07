@@ -1,11 +1,13 @@
 import { Injectable } from '@nestjs/common';
 
 import { UsersService } from 'src/users/users.service';
+import { AuthService } from '../auth.service';
 
 @Injectable()
 export class FacebookService {
 
-    constructor(private userService: UsersService) {}
+    constructor(private userService: UsersService,
+                private authService: AuthService) {}
 
     async facebookLogin(req: {user: any}) {
         if (!req.user) {
@@ -16,13 +18,25 @@ export class FacebookService {
         if (!user) {
             const userDto = {
                 "login": req.user.emails,
-                "password": req.user.accesToken
+                "password": req.user.accesToken,
+                "name": `${req.user.firstName} ${req.user.lastName}`,
+                "type": 'Facebook',
             }
-            const newUser = this.userService.createUser(userDto);
+            const user = await this.authService.registration(userDto)
+            const refreshToken = user.ref;
+            return {
+                message: 'Информация о пользователе Вконтакте',
+                user: req.user,
+                refreshToken: refreshToken,
+            }
+        } else {
+            const updateUser = this.userService.updateUserToken(req.user.emails, req.user.accesToken);
         }
+        const refreshToken = await this.userService.getUserRefreshTokenById(user.id);
         return {
-            message: 'Информация о пользователе гугл',
-            user: req.user
+            message: 'Информация о пользователе Вконтакте',
+            user: req.user,
+            refreshToken: refreshToken.refreshToken,
         }
     }
 }

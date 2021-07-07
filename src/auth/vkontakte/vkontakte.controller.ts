@@ -1,6 +1,7 @@
-import { Controller, Get, HttpStatus, Req, UseGuards } from '@nestjs/common';
+import { Controller, Get, HttpStatus, Req, Res, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { Response } from 'express';
 
 import { VkontakteService } from './vkontakte.service';
 
@@ -20,7 +21,9 @@ export class VkontakteController {
     @ApiOperation({summary:'Переадресация пользователя'})
     @Get('/redirect')
     @UseGuards(AuthGuard("vkontakte"))
-    vkLoginRedirect(@Req() req: any): Promise<any> {
-        return this.vkontakteService.vkLogin(req);
+    async vkLoginRedirect(@Req() req: any, @Res({passthrough: true}) res: Response): Promise<any> {
+        const user = await this.vkontakteService.vkLogin(req);
+        res.cookie('refreshToken', user['refreshToken'], {maxAge: 30 * 24 * 60 * 60 * 1000, httpOnly: true});
+        return user
     }
 }

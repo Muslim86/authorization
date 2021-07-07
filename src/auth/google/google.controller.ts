@@ -1,6 +1,7 @@
-import { Controller, Get, UseGuards, Req } from '@nestjs/common';
+import { Controller, Get, UseGuards, Req, Res } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { Response} from 'express';
 
 import { GoogleService } from './google.service';
 
@@ -17,7 +18,9 @@ export class GoogleController {
     @ApiOperation({summary:'Переадресация пользователя'})
     @Get('redirect')
     @UseGuards(AuthGuard('google'))
-    googleAuthRedirect(@Req() req) {
-        return this.googleService.googleLogin(req)
+    async googleAuthRedirect(@Req() req: any, @Res({passthrough: true}) res: Response): Promise<any> {
+        const user = await this.googleService.googleLogin(req);
+        res.cookie('refreshToken', user['refreshToken'], {maxAge: 30 * 24 * 60 * 60 * 1000, httpOnly: true});
+        return user
     }
 }

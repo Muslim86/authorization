@@ -1,7 +1,8 @@
-import { Body, Get } from '@nestjs/common';
-import { Param } from '@nestjs/common';
-import { Controller, Post } from '@nestjs/common';
+import { UseGuards } from '@nestjs/common';
+import { Body, Get, Param, Controller, Post } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+
 import { CreateRoleDto } from './dto/create-role.dto';
 import { Role } from './roles.model';
 import { RolesService } from './roles.service';
@@ -13,6 +14,7 @@ export class RolesController {
 
     @ApiOperation({summary:'Создание роли'})
     @ApiResponse({status: 200, type: Role})
+    @UseGuards(JwtAuthGuard)
     @Post()
     create(@Body() dto: CreateRoleDto) {
         return this.roleService.createRole(dto)

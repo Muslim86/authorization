@@ -15,7 +15,15 @@ export class User extends Model<User, UserCreationAttr> {
     @Column({type: DataType.INTEGER, unique: true, autoIncrement: true, primaryKey: true})
     id: number;
 
-    @ApiProperty({example:'ВасяПупкин', description:'Логин пользователя'})
+    @ApiProperty({example:'Вконтакте', description:'Тип зарегистрированного аккаунта'})
+    @Column({type: DataType.STRING})
+    typeAccount: string;
+
+    @ApiProperty({example:'Вася Пупкин', description:'Имя пользователя'})
+    @Column({type: DataType.STRING})
+    name: string;
+
+    @ApiProperty({example:'89998887766 / user@mail.ru', description:'Логин пользователя'})
     @Column({type: DataType.STRING, unique: true, allowNull: false})
     login: string;
 
