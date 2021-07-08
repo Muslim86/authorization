@@ -13,7 +13,7 @@ export class VkontakteStategy extends PassportStrategy(Strategy, 'vkontakte') {
             clientID: process.env.VK_APP_ID,
             clientSecret: process.env.VK_APP_SECRET,
             callbackURL: `http://localhost:${process.env.PORT}/vk/redirect`,
-            scope: ["email"],
+            scope: ["email", "profile"],
         },
         async function validate(accesToken: string, refreshToken: string, params: any , profile : Profile, done: VerifyCallback): Promise<any> {
             const {name, emails} = profile; 
@@ -21,6 +21,7 @@ export class VkontakteStategy extends PassportStrategy(Strategy, 'vkontakte') {
                 firstName: name.givenName,
                 lastName: name.familyName,
                 id: profile.id,
+                picture: profile.photos[0].value,
                 accesToken
             }
     

@@ -21,6 +21,7 @@ export class VkontakteService {
                 "password": String(req.user.accesToken),
                 "name": `${req.user.firstName} ${req.user.lastName}`,
                 "typeAccount": 'VK',
+                "picture": String(req.user.picture),
             }
             const user = await this.authService.registration(userDto);
             const refreshToken = user.ref;

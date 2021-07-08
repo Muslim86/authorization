@@ -21,6 +21,7 @@ export class FacebookService {
                 "password": req.user.accesToken,
                 "name": `${req.user.firstName} ${req.user.lastName}`,
                 "type": 'Facebook',
+                "picture": String(req.user.picture),
             }
             const user = await this.authService.registration(userDto)
             const refreshToken = user.ref;

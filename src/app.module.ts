@@ -13,6 +13,8 @@ import { VkontakteModule } from './auth/vkontakte/vkontakte.module';
 import { Auth } from "./auth/auth.model";
 import { AuthModule } from "./auth/auth.module";
 import { ErrorMiddleware } from "./middleware/error-middleware"
+import { PhoneModule } from "./auth/phone/phone.module";
+import { HttpModule } from "@nestjs/axios";
 
 @Module({
     controllers: [],
@@ -37,6 +39,8 @@ import { ErrorMiddleware } from "./middleware/error-middleware"
         GoogleModule,
         FacebookModule,
         VkontakteModule,
+        PhoneModule,
+        HttpModule
     ],
 })
 export class AppModule implements NestModule{

@@ -1,7 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { PassportStrategy } from "@nestjs/passport";
 import { Strategy, Profile } from "passport-facebook";
-import { STRING } from "sequelize/types";
 
 
 @Injectable()
@@ -23,6 +22,8 @@ export class FacebookStategy extends PassportStrategy(Strategy, 'facebook') {
             email: emails[0].value,
             firstName: name.givenName,
             lastName: name.familyName,
+            picture: profile.photos[0].value,
+            accesToken
         }
         const payload = {
             user,

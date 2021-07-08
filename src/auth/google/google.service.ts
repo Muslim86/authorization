@@ -17,14 +17,15 @@ export class GoogleService {
         const user = await this.userService.getUserByLogin(req.user.emails);
         if (!user) {
             let userName = `${req.user.firstName}`
-            if (req.user.lastName !== undefined) {
+            if (req.user.lastName) {
                 userName = `${userName} ${req.user.lastName}`
             }
             const userDto = {
                 "login": String(req.user.emails),
                 "password": String(req.user.accesToken),
-                "name": `${req.user.firstName} ${req.user.lastName}`,
+                "name": `${userName}`,
                 "typeAccount": "Google",
+                "picture": String(req.user.picture),
             }
             const user = await this.authService.registration(userDto)
             const refreshToken = user.ref;

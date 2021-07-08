@@ -3,19 +3,26 @@ import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { Response, Request } from 'express';
 
 import { ValidationPipe } from 'src/pipes/validation.pipe';
-import { AuthService } from './auth.service';
-import { CreateUserDto } from './dto/create-user.dto';
+import { AuthService } from '../auth.service';
+import { CreateNumberUserDto } from '../dto/create-number-user.dto';
+import { NumberUserDto } from '../dto/number-user.dto';
 
-@ApiTags('Регистрация Email')
-@Controller('/auth')
-export class AuthController {
+@ApiTags('Регистрация по номеру')
+@Controller('phone')
+export class PhoneController {
 
     constructor(private authService: AuthService) {}
 
+    @Post('/check')
+    async checkLogin(@Body() userDto: NumberUserDto) {
+        const data = this.authService.loginPhoneStepOne(userDto);
+        return data;
+    }
+
     @ApiOperation({summary:'Авторизация пользователя'})
     @Post('/login')
-    async login(@Body() userDto: CreateUserDto, @Res({passthrough: true}) res: Response) {
-        const data = this.authService.login(userDto);
+    async login(@Body() userDto: CreateNumberUserDto, @Res({passthrough: true}) res: Response) {
+        const data = this.authService.loginPhoneStepTwo(userDto);
         res.cookie('accesToken', (await data).acc, {maxAge: 30 * 60 * 1000, httpOnly: true});
         return data;
     }
@@ -32,9 +39,8 @@ export class AuthController {
     @ApiOperation({summary:'Регистрация пользователя'})
     @UsePipes(ValidationPipe)
     @Post('/registration')
-    async registration(@Body() userDto: CreateUserDto, @Res({passthrough: true}) res: Response) {
-        const data = this.authService.registration(userDto);
-        res.cookie('accesToken', (await data).acc, {maxAge: 30 * 60 * 1000, httpOnly: true});
+    async registration(@Body() userDto: CreateNumberUserDto, @Res({passthrough: true}) res: Response) {
+        const data = this.authService.registrationPhone(userDto);
         return data
     }
 
@@ -46,5 +52,5 @@ export class AuthController {
         res.cookie('accesToken', (await data).acc, {maxAge: 30 * 60 * 1000, httpOnly: true});
         return data;
     }
-
+    
 }
