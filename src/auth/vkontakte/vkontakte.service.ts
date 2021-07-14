@@ -11,7 +11,7 @@ export class VkontakteService {
 
     async vkLogin(req: {user: any}) {
         if (!req.user) {
-            return 'Нет пользователя вк'
+            return 'Нет пользователя Вконтакте'
         }
         const user = await this.userService.getUserByLogin(String(req.user.id));
         
