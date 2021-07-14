@@ -11,7 +11,7 @@ export class FacebookService {
 
     async facebookLogin(req: {user: any}) {
         if (!req.user) {
-            return 'Нет пользователя гугл'
+            return 'Нет пользователя Facebook'
         }
 
         const user = await this.userService.getUserByLogin(req.user.emails);
@@ -26,7 +26,7 @@ export class FacebookService {
             const user = await this.authService.registration(userDto)
             const refreshToken = user.ref;
             return {
-                message: 'Информация о пользователе Вконтакте',
+                message: 'Информация о пользователе Facebook',
                 user: req.user,
                 refreshToken: refreshToken,
             }
@@ -35,7 +35,7 @@ export class FacebookService {
         }
         const refreshToken = await this.userService.getUserRefreshTokenById(user.id);
         return {
-            message: 'Информация о пользователе Вконтакте',
+            message: 'Информация о пользователе Facebook',
             user: req.user,
             refreshToken: refreshToken.refreshToken,
         }
