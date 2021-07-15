@@ -11,9 +11,13 @@ export class AllExceptionsFilter implements ExceptionFilter {
             exception instanceof HttpException
                 ? exception.getStatus()
                 : HttpStatus.INTERNAL_SERVER_ERROR;
-
+        const messages =
+            exception instanceof  HttpException
+                ? exception.getResponse()
+                : 'No messages';
         response.status(status).json({
             statusCode: status,
+            messages: messages,
             timestamp: new Date().toISOString(),
             path: request.url,
         });
