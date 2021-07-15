@@ -2,6 +2,7 @@ import { NestFactory } from "@nestjs/core";
 import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
 import { AppModule } from "./app.module";
 import * as cookieParser from 'cookie-parser';
+import {AllExceptionsFilter} from "./filters/all-exceptions.filter";
 
 
 
@@ -9,6 +10,7 @@ async function start() {
     const PORT = process.env.PORT || 5000;
     const app = await NestFactory.create(AppModule);
     app.use(cookieParser());
+    app.useGlobalFilters(new AllExceptionsFilter())
     
     const config = new DocumentBuilder()
         .setTitle('Autorization')
