@@ -25,7 +25,6 @@ export class UsersController {
     @Get('/:value')
     async getUser(@Param('value') value: string) {
         let user = await this.userService.getUserByLogin(value)
-        console.log(user)
         if (!user) {
             throw new HttpException('нет пользователя', 200)
         }
