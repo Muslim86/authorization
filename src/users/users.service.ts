@@ -18,10 +18,6 @@ export class UsersService {
 
     async getUserByLogin(login: string) {
         let user = await this.userRepository.findOne({where: {login}, include: {all: true}});
-        if (!user) {
-            throw new HttpException('нет пользователя', 200)
-        }
-        console.log(user)
         return user;
     }
 

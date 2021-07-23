@@ -1,4 +1,4 @@
-import { Param, UseGuards} from '@nestjs/common';
+import {HttpException, Param, UseGuards} from '@nestjs/common';
 import { Controller, Get } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
@@ -23,7 +23,12 @@ export class UsersController {
     @ApiResponse({status: 200, type: [User]})
     @UseGuards(JwtAuthGuard)
     @Get('/:value')
-    getUser(@Param('value') value: string) {
-        return this.userService.getUserByLogin(value)
+    async getUser(@Param('value') value: string) {
+        let user = await this.userService.getUserByLogin(value)
+        console.log(user)
+        if (!user) {
+            throw new HttpException('нет пользователя', 200)
+        }
+        return user
     }
 }
