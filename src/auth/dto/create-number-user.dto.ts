@@ -3,7 +3,7 @@ import { IsPhoneNumber, IsString, Length } from "class-validator";
 
 
 export class CreateNumberUserDto {
-    @ApiProperty({example:'user@mail.ru', description:'Логин/почта пользователя'})
+    @ApiProperty({example:'+79998887766', description:'Логин/почта пользователя'})
     @IsString({message: 'Должно быть строкой'})
     @IsPhoneNumber()
     @Length(1, 255, {message: 'Не менее 1 и не более 255 символов'})
@@ -12,7 +12,7 @@ export class CreateNumberUserDto {
     @ApiProperty({example:'qwerty123', description:'Пароль пользователя'})
     readonly password?: string;
 
-    @ApiProperty({example:'Email', description:'Тип аккаунта'})
+    @ApiProperty({example:'Phone', description:'Тип аккаунта'})
     @IsString({message: 'Должно быть строкой'})
     @Length(1, 255, {message: 'Не менее 1 и не более 255 символов'})
     readonly typeAccount?: string;

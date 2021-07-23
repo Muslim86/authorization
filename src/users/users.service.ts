@@ -1,8 +1,9 @@
-import { Injectable } from '@nestjs/common';
+import {HttpException, Injectable} from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { Auth } from 'src/auth/auth.model';
 import { RolesService } from 'src/roles/roles.service';
 import { User } from './users.model';
+import {ExceptionHandler} from "@nestjs/core/errors/exception-handler";
 
 @Injectable()
 export class UsersService {
@@ -16,7 +17,11 @@ export class UsersService {
     }
 
     async getUserByLogin(login: string) {
-        const user = await this.userRepository.findOne({where: {login}, include: {all: true}});
+        let user = await this.userRepository.findOne({where: {login}, include: {all: true}});
+        if (!user) {
+            throw new HttpException('нет пользователя', 200)
+        }
+        console.log(user)
         return user;
     }
 

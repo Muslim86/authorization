@@ -1,16 +1,16 @@
-import { HttpException, HttpStatus, Injectable, UnauthorizedException } from '@nestjs/common';
-import { UsersService } from 'src/users/users.service';
+import {HttpException, HttpStatus, Injectable, UnauthorizedException} from '@nestjs/common';
 import * as bcrypt from 'bcryptjs';
-import { User } from 'src/users/users.model';
-import { InjectModel } from '@nestjs/sequelize';
+import {InjectModel} from '@nestjs/sequelize';
 import * as jwt from 'jsonwebtoken'
-import { HttpService } from '@nestjs/axios';
+import {HttpService} from '@nestjs/axios';
 
-import { Auth } from './auth.model';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UserDto } from './dto/user.dto';
-import { CreateNumberUserDto } from './dto/create-number-user.dto';
-import { NumberUserDto } from './dto/number-user.dto';
+import {UsersService} from 'src/users/users.service';
+import {User} from 'src/users/users.model';
+import {Auth} from './auth.model';
+import {CreateUserDto} from './dto/create-user.dto';
+import {UserDto} from './dto/user.dto';
+import {CreateNumberUserDto} from './dto/create-number-user.dto';
+import {NumberUserDto} from './dto/number-user.dto';
 
 @Injectable()
 export class AuthService {
@@ -38,10 +38,10 @@ export class AuthService {
         const user = await this.validateNumberUser(createNumberUserDto);
         const login = user.login;
         const password = await this.generatePassword();
-        const send = this.sendPhonePassword(String(password), login);
+        await this.sendPhonePassword(String(password), login);
         const userData = await this.userRepository.findOne({where: {login}});
         userData.password = await bcrypt.hash(String(password), 4);
-        userData.save();
+        await userData.save();
         return userData;
     }
 
@@ -60,15 +60,14 @@ export class AuthService {
     }
 
     async logout(refreshToken: string) {
-        const token = await this.authRepository.destroy({where: {refreshToken}})
-        return token;
+        return await this.authRepository.destroy({where: {refreshToken}});
     }
 
     async refresh(refreshToken: string) {
         if (!refreshToken) {
             throw new HttpException('Нет данных', HttpStatus.BAD_REQUEST)
         }
-        const userData = await this.validateRefreshToken(refreshToken);
+        const userData = await AuthService.validateRefreshToken(refreshToken);
         const tokenFromDb = await this.authRepository.findOne({where:{refreshToken}});
         if (!userData || !tokenFromDb) {
             throw new HttpException('Пользователь не авторизован!', HttpStatus.BAD_REQUEST);
@@ -115,7 +114,7 @@ export class AuthService {
         const password = await this.generatePassword();
         const hashPassword = await bcrypt.hash(String(password), 4);
         const user = await this.userRepository.create({...createUserDto, password: hashPassword});
-        this.sendPhonePassword(password, user.login.replace('+', ''));
+        await this.sendPhonePassword(password, user.login.replace('+', ''));
         
         const userDto = new UserDto(user);
         const tokens = this.generateToken({...userDto});
@@ -148,7 +147,7 @@ export class AuthService {
          const auth = new this.authRepository();
          auth.user = user;
          auth.refreshToken = refreshToken;
-         auth.save();
+         await auth.save();
         return 
     }
 
@@ -164,7 +163,6 @@ export class AuthService {
         } catch (error) {
             throw new UnauthorizedException({message:'Некорректная почта или пароль'});
         }
-        
     }
 
     private async validateNumberUser(userDto: CreateNumberUserDto) {
@@ -180,19 +178,9 @@ export class AuthService {
         } catch (error) {
             throw new UnauthorizedException({message:'Некорректное имя или номер'});
         }
-        
     }
 
-    private async validateAccesToken(token: string) {
-        try {
-            const userData = jwt.verify(token, process.env.JWT_ACCES_SECRET);
-            return userData;
-        } catch (error) {
-            return null;
-        }
-    }
-
-    private async validateRefreshToken(token: string) {
+    private static async validateRefreshToken(token: string) {
         try {
             const userData = jwt.verify(token, process.env.JWT_REFRESH_SECRET);
             return userData;
@@ -211,11 +199,10 @@ export class AuthService {
 
     private async sendPhonePassword(password: string, phone) {
         const url = encodeURI(`https://sms.ru/sms/send?api_id=${process.env.PHONE_API_ID}&to=${phone},74993221627&msg=Ваш+код+доступа:+${password}&json=1`);
-        const query = this.httpService.post(url, {message: 'test'}).subscribe(
+        return this.httpService.post(url, {message: 'test'}).subscribe(
             res => {
                 //console.log(res)
             }
         )
-        return query
     }
 }
