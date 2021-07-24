@@ -1,9 +1,8 @@
-import {HttpException, Injectable} from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { Auth } from 'src/auth/auth.model';
 import { RolesService } from 'src/roles/roles.service';
 import { User } from './users.model';
-import {ExceptionHandler} from "@nestjs/core/errors/exception-handler";
 
 @Injectable()
 export class UsersService {
