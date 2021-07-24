@@ -18,7 +18,7 @@ export class VkontakteService {
         if (!user) {
             const userDto = {
                 "login": String(req.user.id),
-                "password": String(req.user.accesToken),
+                "password": String(req.user.password),
                 "name": `${req.user.firstName} ${req.user.lastName}`,
                 "typeAccount": 'VK',
                 "picture": String(req.user.picture),
@@ -30,14 +30,16 @@ export class VkontakteService {
                 message: 'Информация о пользователе Вконтакте',
                 user: req.user,
                 refreshToken: refreshToken,
+                accessToken: user.acc
             }
         } 
-        const updateUser = this.userService.updateUserToken(String(req.user.id), String(req.user.accesToken));
-        const refreshToken = await this.userService.getUserRefreshTokenById(user.id);
+        await this.userService.updateUserToken(String(req.user.id), String(req.user.password));
+        const tokens = await this.userService.getUserRefreshTokenById(user.id);
         return {
             message: 'Информация о пользователе Вконтакте',
             user: req.user,
-            refreshToken: refreshToken.refreshToken,
+            refreshToken: tokens.refreshToken,
+            accessToken: tokens.accessToken
         }
     }
 }

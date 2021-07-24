@@ -14,6 +14,10 @@ export class Auth extends Model<Auth> {
 
     @ApiProperty({example:'osjmqwUsfkfkauxwns-s821-sakMa', description:'Refresh token'})
     @Column({type: DataType.STRING})
+    accessToken: string;
+
+    @ApiProperty({example:'osjmqwUsfkfkauxwns-s821-sakMa', description:'Refresh token'})
+    @Column({type: DataType.STRING})
     refreshToken: string;
 
 }

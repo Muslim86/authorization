@@ -15,14 +15,14 @@ export class VkontakteStategy extends PassportStrategy(Strategy, 'vkontakte') {
             callbackURL: `http://localhost:${process.env.PORT}/vk/redirect`,
             scope: ["email", "profile"],
         },
-        async function validate(accesToken: string, refreshToken: string, params: any , profile : Profile, done: VerifyCallback): Promise<any> {
+        async function validate(accessToken: string, refreshToken: string, params: any , profile : Profile, done: VerifyCallback): Promise<any> {
             const {name, emails} = profile; 
             const user = {
                 firstName: name.givenName,
                 lastName: name.familyName,
                 id: profile.id,
                 picture: profile.photos[0].value,
-                accesToken
+                password: accessToken
             }
     
             done(null, user)

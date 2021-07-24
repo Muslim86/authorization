@@ -28,20 +28,21 @@ export class GoogleService {
                 "picture": String(req.user.picture),
             }
             const user = await this.authService.registration(userDto)
-            const refreshToken = user.ref;
             return {
                 message: 'Информация о пользователе Google',
                 user: req.user,
-                refreshToken: refreshToken,
+                refreshToken: user.ref,
+                accessToken: user.acc
             }
         } else {
-            const updateUser = this.userService.updateUserToken(req.user.emails, req.user.accesToken);
+            await this.userService.updateUserToken(req.user.emails, req.user.password);
         }
-        const refreshToken = await this.userService.getUserRefreshTokenById(user.id);
+        const tokens = await this.userService.getUserRefreshTokenById(user.id);
         return {
             message: 'Информация о пользователе Google',
             user: req.user,
-            refreshToken: refreshToken.refreshToken,
+            refreshToken: tokens.refreshToken,
+            accessToken: tokens.accessToken
         }
     }
 }

@@ -20,7 +20,7 @@ export class GoogleController {
     @UseGuards(AuthGuard('google'))
     async googleAuthRedirect(@Req() req: any, @Res({passthrough: true}) res: Response): Promise<any> {
         const user = await this.googleService.googleLogin(req);
-        res.cookie('refreshToken', user['refreshToken'], {maxAge: 30 * 24 * 60 * 60 * 1000, httpOnly: true});
+        res.cookie('accessToken', user['accessToken'], {maxAge: 30 * 24 * 60 * 60 * 1000, httpOnly: true});
         return user
     }
 }

@@ -1,9 +1,10 @@
-import {HttpException, Param, UseGuards} from '@nestjs/common';
+import {HttpException, HttpStatus, Param, Req, UseGuards} from '@nestjs/common';
 import { Controller, Get } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { User } from './users.model';
 import { UsersService } from './users.service';
+import {Request} from "express";
 
 @ApiTags('Пользователи')
 @Controller('users')
@@ -17,17 +18,5 @@ export class UsersController {
     @Get()
     getAll() {
         return this.userService.getAllUsers();
-    }
-
-    @ApiOperation({summary:'Получение пользователя'})
-    @ApiResponse({status: 200, type: [User]})
-    @UseGuards(JwtAuthGuard)
-    @Get('/:value')
-    async getUser(@Param('value') value: string) {
-        let user = await this.userService.getUserByLogin(value)
-        if (!user) {
-            throw new HttpException('нет пользователя', 200)
-        }
-        return user
     }
 }

@@ -30,9 +30,9 @@ export class UsersService {
         return user;
     }
 
-    async updateUserToken(login: string, accesToken: string) {
+    async updateUserToken(login: string, accessToken: string) {
         const user = await this.userRepository.findOne({where: {login}});
-        user.password = accesToken
+        user.password = accessToken
         await user.save();
     }
 }
