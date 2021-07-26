@@ -90,8 +90,8 @@ export class AuthService {
         const password = await this.generatePassword();
         const hashPassword = await bcrypt.hash(String(password), 4);
         const user = await this.userRepository.create({...createUserDto, password: hashPassword});
-        await this.sendPhonePassword(password, user.login.replace('+', ''));
-        
+        //await this.sendPhonePassword(password, user.login.replace('+', ''));
+        console.log(password)
         const userDto = new UserDto(user);
         const tokens = this.generateToken({...userDto});
         const acc = (await tokens).accessToken;
@@ -109,7 +109,8 @@ export class AuthService {
         const user = await this.validateNumberUser(createNumberUserDto);
         const login = user.login;
         const password = await this.generatePassword();
-        await this.sendPhonePassword(String(password), login);
+        console.log(password)
+        //await this.sendPhonePassword(String(password), login);
         const userData = await this.userRepository.findOne({where: {login}});
         userData.password = await bcrypt.hash(String(password), 4);
         await userData.save();
@@ -117,8 +118,8 @@ export class AuthService {
     }
 
     async loginPhoneStepTwo(loginNumberUserDto: LoginNumberUserDto) {
-        const user = await this.validateNumberUser(loginNumberUserDto);
-        await this.validateNumberUserCode(loginNumberUserDto);
+        console.log(loginNumberUserDto)
+        const user = await this.validateNumberUserCode(loginNumberUserDto);
         const userDto = new UserDto(user);
         const tokens = this.generateToken({...userDto});
         const acc = (await tokens).accessToken;
@@ -186,6 +187,7 @@ export class AuthService {
     private async validateNumberUserCode(userDto: LoginNumberUserDto) {
         const login = userDto.login
         const password = userDto.code
+        console.log(login, password)
         try {
             const user = await this.userRepository.findOne({where: {login}});
             const passwordEquals = await bcrypt.compare(password, user.password)
