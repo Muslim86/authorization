@@ -90,8 +90,7 @@ export class AuthService {
         const password = await this.generatePassword();
         const hashPassword = await bcrypt.hash(String(password), 4);
         const user = await this.userRepository.create({...createUserDto, password: hashPassword});
-        //await this.sendPhonePassword(password, user.login.replace('+', ''));
-        console.log(password)
+        await this.sendPhonePassword(password, user.login.replace('+', ''));
         const userDto = new UserDto(user);
         const tokens = this.generateToken({...userDto});
         const acc = (await tokens).accessToken;
@@ -109,8 +108,7 @@ export class AuthService {
         const user = await this.validateNumberUser(createNumberUserDto);
         const login = user.login;
         const password = await this.generatePassword();
-        console.log(password)
-        //await this.sendPhonePassword(String(password), login);
+        await this.sendPhonePassword(String(password), login);
         const userData = await this.userRepository.findOne({where: {login}});
         userData.password = await bcrypt.hash(String(password), 4);
         await userData.save();

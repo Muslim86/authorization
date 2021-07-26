@@ -11,7 +11,7 @@ async function start() {
     const app = await NestFactory.create(AppModule);
     app.use(cookieParser());
     app.useGlobalFilters(new AllExceptionsFilter())
-    app.enableCors({credentials: true, origin: "*"})
+    app.enableCors({credentials: true, origin: process.env.URL_CLIENT})
     
     const config = new DocumentBuilder()
         .setTitle('Autorization')
