@@ -3,6 +3,7 @@ import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
 import { AppModule } from "./app.module";
 import * as cookieParser from 'cookie-parser';
 import {AllExceptionsFilter} from "./filters/all-exceptions.filter";
+import {InternalServerErrorInterceptor} from "./interceptors/internal-server-error.interceptor";
 
 
 
@@ -11,8 +12,9 @@ async function start() {
     const app = await NestFactory.create(AppModule);
     app.use(cookieParser());
     app.useGlobalFilters(new AllExceptionsFilter())
-    app.enableCors({credentials: true, origin: process.env.URL_CLIENT})
-    
+    app.enableCors({credentials: true, origin: process.env.URL_CLIENT});
+    app.useGlobalInterceptors(new InternalServerErrorInterceptor());
+
     const config = new DocumentBuilder()
         .setTitle('Autorization')
         .setDescription('Документация по Autorization API')
@@ -22,7 +24,7 @@ async function start() {
     SwaggerModule.setup('/api/docs', app, document)
 
     await app.listen(PORT, () => console.log(`Сервер запущен на порте = ${PORT}`))
-    
+
 }
 
 start()
