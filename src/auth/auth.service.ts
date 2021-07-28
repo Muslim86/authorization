@@ -35,8 +35,8 @@ export class AuthService {
         }
     }
 
-    async logout(refreshToken: string) {
-        return await this.authRepository.destroy({where: {refreshToken}});
+    async logout(accessToken: string) {
+        return await this.authRepository.destroy({where: {accessToken}});
     }
 
     async refresh(refreshToken: string) {
@@ -68,12 +68,12 @@ export class AuthService {
         }
         const hashPassword = await bcrypt.hash(createUserDto.password, 4);
         const user = await this.userRepository.create({...createUserDto, password: hashPassword});
-        
+
         const userDto = new UserDto(user);
         const tokens = this.generateToken({...userDto});
         const acc = (await tokens).accessToken;
         const ref = (await tokens).refreshToken;
-        
+
         await this.saveToken(userDto.id, acc, ref)
         return {
             acc,
@@ -95,7 +95,7 @@ export class AuthService {
         const tokens = this.generateToken({...userDto});
         const acc = (await tokens).accessToken;
         const ref = (await tokens).refreshToken;
-        
+
         await this.saveToken(userDto.id, acc, ref)
         return {
             acc,
@@ -151,7 +151,7 @@ export class AuthService {
          auth.accessToken = accessToken;
          auth.refreshToken = refreshToken;
          await auth.save();
-        return 
+        return
     }
 
     private async validateUser(userDto: CreateUserDto) {
@@ -226,7 +226,7 @@ export class AuthService {
 
     async getUserByAccessToken(accessToken: string) {
         const userId = await this.authRepository.findOne({where:{accessToken}})
-        const user = await this.userService.getUserById(userId.id)
+        const user = await this.userService.getUserById(userId.user)
         return user;
     }
 }

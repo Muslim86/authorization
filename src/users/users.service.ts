@@ -1,8 +1,8 @@
-import { Injectable } from '@nestjs/common';
-import { InjectModel } from '@nestjs/sequelize';
-import { Auth } from 'src/auth/auth.model';
-import { RolesService } from 'src/roles/roles.service';
-import { User } from './users.model';
+import {Injectable} from '@nestjs/common';
+import {InjectModel} from '@nestjs/sequelize';
+import {Auth} from 'src/auth/auth.model';
+import {RolesService} from 'src/roles/roles.service';
+import {User} from './users.model';
 
 @Injectable()
 export class UsersService {
@@ -25,9 +25,8 @@ export class UsersService {
         return user;
     }
 
-    async getUserRefreshTokenById(id: number) {
-        const user = await this.authRepository.findOne({where: {id}})
-        return user;
+    async getUserRefreshTokenById(user: number) {
+        return await this.authRepository.findOne({where: {user}});
     }
 
     async updateUserToken(login: string, accessToken: string) {

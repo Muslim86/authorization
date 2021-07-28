@@ -9,7 +9,7 @@ config()
 export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
 
     constructor() {
-        
+
         super({
             clientID: process.env.GOOGLE_CLIENT_ID,
             clientSecret: process.env.GOOGLE_CLIENT_SECRET,
@@ -24,9 +24,9 @@ export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
             firstName: name.givenName,
             lastName: name.familyName,
             picture: photos[0].value,
-            accessToken
+            password: accessToken
             }
 
-        done(null, user)      
+        done(null, user)
     }
 }

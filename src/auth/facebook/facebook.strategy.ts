@@ -17,13 +17,13 @@ export class FacebookStategy extends PassportStrategy(Strategy, 'facebook') {
     }
 
     async validate(accesToken: string, refreshToken: string, profile : Profile, done: (err: any, user: any, info?: any) => void): Promise<any> {
-        const {name, emails} = profile; 
+        const {name, emails} = profile;
         const user = {
             email: emails[0].value,
             firstName: name.givenName,
             lastName: name.familyName,
             picture: profile.photos[0].value,
-            accesToken
+            password: accesToken
         }
         const payload = {
             user,
@@ -31,5 +31,5 @@ export class FacebookStategy extends PassportStrategy(Strategy, 'facebook') {
         };
 
         done(null, payload)
-    } 
+    }
 }

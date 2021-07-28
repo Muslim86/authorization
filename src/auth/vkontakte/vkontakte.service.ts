@@ -14,7 +14,7 @@ export class VkontakteService {
             return 'Нет пользователя Вконтакте'
         }
         const user = await this.userService.getUserByLogin(String(req.user.id));
-        
+        console.log(req.user)
         if (!user) {
             const userDto = {
                 "login": String(req.user.id),
@@ -24,15 +24,13 @@ export class VkontakteService {
                 "picture": String(req.user.picture),
             }
             const user = await this.authService.registration(userDto);
-            const refreshToken = user.ref;
-
             return {
                 message: 'Информация о пользователе Вконтакте',
                 user: req.user,
-                refreshToken: refreshToken,
+                refreshToken: user.ref,
                 accessToken: user.acc
             }
-        } 
+        }
         await this.userService.updateUserToken(String(req.user.id), String(req.user.password));
         const tokens = await this.userService.getUserRefreshTokenById(user.id);
         return {

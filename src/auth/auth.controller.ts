@@ -1,4 +1,15 @@
-import {Body, Controller, Post, Res, HttpStatus, Req, UsePipes, UseGuards, Get, Put} from '@nestjs/common';
+import {
+    Body,
+    Controller,
+    Post,
+    Res,
+    HttpStatus,
+    Req,
+    UsePipes,
+    Get,
+    Put,
+    HttpException
+} from '@nestjs/common';
 import {ApiOperation, ApiResponse, ApiTags} from '@nestjs/swagger';
 import { Response, Request } from 'express';
 
@@ -34,8 +45,10 @@ export class AuthController {
     @Get('/logout')
     async logout(@Req() request: Request, @Res({passthrough: true}) res: Response) {
         const {accessToken} = request.cookies;
-        await this.authService.logout(accessToken);
-        res.clearCookie('accessToken', 'refreshToken');
+        if (!accessToken) {
+            throw new HttpException('cookie not found', 404)
+        }
+        res.clearCookie('accessToken');
         return HttpStatus.OK
     }
 
@@ -53,6 +66,9 @@ export class AuthController {
     @Get('/me')
     async getUser(@Req() request: Request) {
         const {accessToken} = request.cookies;
+        if (!accessToken) {
+            throw new HttpException('cookie not found', 404)
+        }
         return await this.authService.getUserByAccessToken(accessToken);
     }
 }
