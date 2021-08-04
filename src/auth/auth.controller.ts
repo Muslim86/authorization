@@ -56,7 +56,7 @@ export class AuthController {
     @ApiOperation({summary:'Обновление токенов'})
     @Put('/refresh')
     async refresh(@Req() request: Request, @Res({passthrough: true}) res: Response) {
-        const refreshToken = request.header("refreshToken");
+        const refreshToken = request.header("Authorization").split(' ')[1];
         const data = this.authService.refresh(refreshToken);
         res.cookie('accessToken', (await data).acc, {maxAge: 30 * 60 * 1000, httpOnly: true});
         return data;

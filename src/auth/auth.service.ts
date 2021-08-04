@@ -41,12 +41,12 @@ export class AuthService {
 
     async refresh(refreshToken: string) {
         if (!refreshToken) {
-            throw new HttpException('Нет refreshToken', HttpStatus.BAD_REQUEST)
+            throw new HttpException('Нет refreshToken', HttpStatus.UNAUTHORIZED)
         }
         const userData = await AuthService.validateRefreshToken(refreshToken);
         const tokenFromDb = await this.authRepository.findOne({where:{refreshToken}});
         if (!userData || !tokenFromDb) {
-            throw new HttpException('Пользователь не авторизован!', HttpStatus.BAD_REQUEST);
+            throw new HttpException('Пользователь не авторизован!', HttpStatus.UNAUTHORIZED);
         }
         const user = await this.userService.getUserById(Number(userData["id"]));
         const userDto = new UserDto(user);
