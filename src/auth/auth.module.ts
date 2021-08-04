@@ -17,10 +17,7 @@ import { PhoneModule } from './phone/phone.module';
   imports: [
     forwardRef(() => UsersModule),
     JwtModule.register({
-      secret: 'some_secret_key',
-      signOptions: {
-        expiresIn: '24h'
-      }
+      secret: 'some_secret_key'
     }),
     SequelizeModule.forFeature([Auth, User]),
     PhoneModule, HttpModule

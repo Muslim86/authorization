@@ -8,7 +8,7 @@ import {
     UsePipes,
     Get,
     Put,
-    HttpException
+    HttpException, UseGuards
 } from '@nestjs/common';
 import {ApiOperation, ApiResponse, ApiTags} from '@nestjs/swagger';
 import { Response, Request } from 'express';
@@ -17,6 +17,7 @@ import { ValidationPipe } from 'src/pipes/validation.pipe';
 import { AuthService } from './auth.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import {User} from "../users/users.model";
+import {JwtAuthGuard} from "./jwt-auth.guard";
 
 @ApiTags('Регистрация Email')
 @Controller('/auth')
@@ -63,6 +64,7 @@ export class AuthController {
 
     @ApiOperation({summary:'Получение пользователя'})
     @ApiResponse({status: 200, type: [User]})
+    @UseGuards(JwtAuthGuard)
     @Get('/me')
     async getUser(@Req() request: Request) {
         const {accessToken} = request.cookies;
